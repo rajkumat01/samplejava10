@@ -1,4 +1,4 @@
-def appName='App_1'
+    def appName='App_10'
     def snapName=''
     def deployName ='Dep_1'
     def exportFormat ='json'
@@ -18,7 +18,7 @@ pipeline {
         stage('Clone repository') {               
            steps{
                 // checkout scm
-                git branch: 'master', url: 'https://github.com/rajkumat01/samplejava1'
+                git branch: 'master', url: 'https://github.com/rajkumat01/samplejava10'
            }
         }     
         stage('Upload JSON'){
@@ -26,8 +26,9 @@ pipeline {
                 script{
                     sh "echo validating configuration file ${configFilePath}.${exportFormat}"
                     echo "name path ::::: ${namePath}"
-                    changeSetId = snDevOpsConfigUpload(applicationName:"${appName}",target:'component',namePath:"${namePath}", configFile:"fileB.json", autoCommit:true,autoValidate:true,dataFormat:"${exportFormat}")
-                    // snDevOpsConfigUpload(applicationName:"${appName}",target:'deployable',namePath:"${namePath}", fileName:"deployable", autoCommit:'true',autoValidate:'true',dataFormat:"${exportFormat}",changesetNumber:"${changeSetId}", deployableName:"${deployName}")
+                    changeSetId = snDevOpsConfigUpload(applicationName:"${appName}",target:'component',namePath:"${namePath}", configFile:"fileB.json", autoCommit:false,autoValidate:true,dataFormat:"${exportFormat}")
+                    snDevOpsConfigUpload(applicationName:"${appName}",changest:”${changeSetId},”target:'component',namePath:"${namePath}", configFile:"fileA.json", autoCommit:true,autoValidate:true,dataFormat:"${exportFormat}")
+                    //snDevOpsConfigUpload(applicationName:"${appName}",target:'deployable',namePath:"${namePath}", fileName:"fileA.json", autoCommit:'true',autoValidate:'true',dataFormat:"${exportFormat}",changesetNumber:"${changeSetId}", deployableName:"${deployName}")
                     echo "validation result $changeSetId"
                 }
             }
@@ -45,32 +46,10 @@ pipeline {
             steps{
                 echo "Triggering Get snapshots for applicationName:${appName},deployableName:${deployName},changeSetId:${changeSetId}"
                 script{
-                    def count = 1
-                    def x = ""
                     changeSetResults = snDevOpsConfigGetSnapshots(applicationName:"${appName}",deployableName:"${deployName}",changesetNumber:"${changeSetId}")
+                    echo "ChangeSet Result : ${changeSetResults}"
                     def changeSetResultsObject = readJSON text: changeSetResults
-                    echo "debug: ${changeSetResultsObject.validation}"
-                    
-                    if(changeSetResultsObject.validation == "not_validated") {
-               for(int i = 1; i < 51; ++i)  {
-                             x = snDevOpsConfigGetSnapshots(applicationName:"${appName}",deployableName:"${deployName}",changesetNumber:"${changeSetId}")
-                            def y = readJSON text: x
-                            if(y.validation == "not_validated"){
-                       
-                                 sleep(5)   
-                             }
-                             else {
-                                      break  
-                              }
-              }
-                    }
-                    echo "Count : ${i}"
-
-
-                    def changeSetResults1 = snDevOpsConfigGetSnapshots(applicationName:"${appName}",deployableName:"${deployName}",changesetNumber:"${changeSetId}")
-                    echo "ChangeSet Result : ${changeSetResults}"  
-                    def changeSetResultsObject1 = readJSON text: changeSetResults1
-                        changeSetResultsObject1.each {
+                         changeSetResultsObject.each {
                            /* if(it.validation == "passed"){
                                 echo "validation passed for snapshot : ${it.name}"
                                 snapshotName = it.name
@@ -130,8 +109,8 @@ pipeline {
     
     post {
         success {
-            echo 'Run E2ESamplePipeLine1_1!'
-            build job: 'E2ESamplePipeLine1_1', parameters: [string(name: 'MY_PARAM', value: 'value from Build pipeline')]
+            echo 'Run E2ESamplePipeLine10_1!'
+            build job: 'E2ESamplePipeLine10_1', parameters: [string(name: 'MY_PARAM', value: 'value from Build pipeline')]
         }
     }
 }
