@@ -36,6 +36,7 @@ pipeline {
                     echo "name path ::::: ${namePath}"
                     changeSetId = snDevOpsConfigUpload(applicationName:"${appName}",target:'component',namePath:"${namePath}",configFile:"fileB.json",autoCommit:false,autoValidate:true,dataFormat:"${exportFormat}")
                     snDevOpsConfigUpload(applicationName:"${appName}",changesetNumber:"${changeSetId}",target:"component",dataFormat:"json",configFile:"FileC.json",namePath:"${namePath}",autoCommit:false,autoValidate:true)
+                    snDevOpsConfigUpload(applicationName:"${appName}",changesetNumber:"${changeSetId}",target:"component",dataFormat:"json",configFile:"FileD.json",namePath:"${namePath}",autoCommit:false,autoValidate:true)                  
                     snDevOpsConfigUpload(applicationName:"${appName}",changesetNumber:"${changeSetId}",target:"component",dataFormat:"json",configFile:"fileA.json",namePath:"${namePath}",autoCommit:true,autoValidate:true)
                     echo "validation result $changeSetId"
                 }
